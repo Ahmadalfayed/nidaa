@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.Nidaa" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#FF14110E</item>
+        <item name="android:statusBarColor">#FF14110E</item>
+        <item name="android:navigationBarColor">#FF1E1A15</item>
+    </style>
+</resources>
