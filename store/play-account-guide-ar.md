@@ -29,14 +29,14 @@
 - الاسم والوصف المختصر والكامل: انسخهم من `listing/ar.md`، وبعدين ضيف لغة **English (en-US)** وانسخ من `listing/en.md`.
 - App icon: `graphics/icon-512.png`
 - Feature graphic: `graphics/feature-graphic-1024x500.png`
-- Phone screenshots: كل الصور في `screenshots/phone/` (6 صور).
+- Phone screenshots: كل الصور في `screenshots/phone/` (7 صور).
 - Category: **Communication** · Email: aaaaaaaasa2112@gmail.com
 
 ## خامساً: الاختبار المغلق (إجباري للحسابات الشخصية الجديدة)
 Google تشترط: **12 مختبر على الأقل** يكونون مشتركين في الاختبار **14 يوم متواصلة** قبل لا تقدر تطلب النشر للكل.
 1. Testing ← **Closed testing** ← Create track (أو استخدم Alpha).
 2. **Testers:** سوّ قائمة إيميلات (Google Groups أو Email list) وحط فيها **12 إيميل Gmail أو أكثر** (يفضل 15 احتياط).
-3. **Create release:** ارفع ملف **`Nidaa-1.2.0.aab`**. أول مرة يسألك عن **Play App Signing** — وافق (Use Google-generated key)، ومفتاحك الحالي يصير «مفتاح الرفع».
+3. **Create release:** ارفع ملف **`Nidaa-1.3.0.aab`**. أول مرة يسألك عن **Play App Signing** — وافق (Use Google-generated key)، ومفتاحك الحالي يصير «مفتاح الرفع».
 4. اكتب ملاحظة الإصدار: «أول إصدار: لاسلكي ومحادثة ومجموعات واستغاثة بدون إنترنت».
 5. Review release ← Start rollout to Closed testing. المراجعة تاخذ من ساعات إلى كم يوم.
 6. بعد الموافقة، انسخ **رابط الانضمام (opt-in link)** وأرسله للـ 12 شخص. كل واحد:
@@ -50,8 +50,8 @@ Google تشترط: **12 مختبر على الأقل** يكونون مشتركي
 > ملاحظة: أجهزة هواوي ما فيها Google Play، فالمختبرين لازم يكون عندهم جوالات فيها Google Play (سامسونج، شاومي، بكسل…).
 
 ## سادساً: متاجر ثانية (مجانية)
-- **Huawei AppGallery:** https://developer.huawei.com/consumer/ar/ ← سجّل حساب مطور فردي (مجاني، يطلب هوية) ← AppGallery Connect ← My apps ← New app ← ارفع **`Nidaa-1.2.0.apk`** ← نفس الوصف والصور وسياسة الخصوصية. «نِداء» ما يحتاج خدمات Google، فيشتغل على هواوي ✅.
-- **Samsung Galaxy Store:** https://seller.samsungapps.com ← حساب مجاني ← Add new application ← Android ← ارفع **`Nidaa-1.2.0.apk`** ونفس البيانات.
+- **Huawei AppGallery:** https://developer.huawei.com/consumer/ar/ ← سجّل حساب مطور فردي (مجاني، يطلب هوية) ← AppGallery Connect ← My apps ← New app ← ارفع **`Nidaa-1.3.0.apk`** ← نفس الوصف والصور وسياسة الخصوصية. «نِداء» ما يحتاج خدمات Google، فيشتغل على هواوي ✅.
+- **Samsung Galaxy Store:** https://seller.samsungapps.com ← حساب مجاني ← Add new application ← Android ← ارفع **`Nidaa-1.3.0.apk`** ونفس البيانات.
 - في الاثنين استخدم نفس ملف الـ APK الموقّع بمفتاحك، ولا تغيّر المفتاح أبداً (لازم كل التحديثات تنوقّع بنفس المفتاح).
 
 ## مهم جداً

@@ -40,7 +40,7 @@ class MeshService : Service() {
     @SuppressLint("WakelockTimeout")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Hub.init(this)
-        if (intent?.action == STOP) { Hub.mesh.stop(); release(); ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE); stopSelf(); return START_NOT_STICKY }
+        if (intent?.action == STOP) { Hub.bgRunning = false; Hub.mesh.stop(); release(); ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE); stopSelf(); return START_NOT_STICKY }
         var type = 0
         if (Build.VERSION.SDK_INT >= 29) {
             type = ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE

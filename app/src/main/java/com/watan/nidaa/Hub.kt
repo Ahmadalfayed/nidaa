@@ -23,6 +23,7 @@ object Hub {
     lateinit var app: Context; lateinit var st: AppState; lateinit var mesh: Mesh; lateinit var db: Db; lateinit var signal: SignalMonitor
     val main = Handler(Looper.getMainLooper())
     @Volatile var uiVisible = false
+    @Volatile var bgRunning = false
     private var ready = false
     private var notifId = 100
 
@@ -34,7 +35,9 @@ object Hub {
         st.nodeId.value = prefs.getString("node", null) ?: UUID.randomUUID().toString().replace("-", "").take(10).also { prefs.edit().putString("node", it).apply() }
         st.myName.value = prefs.getString("name", null) ?: ("جوال-" + (1000..9999).random()).also { prefs.edit().putString("name", it).apply() }
         st.groups.addAll(GroupStore.load(prefs))
-        st.activeGroup.value = prefs.getString("active", Group.GENERAL)!!.let { if (st.group(it) != null) it else Group.GENERAL }
+        st.settings.load(prefs)
+        st.activeGroup.value = (st.settings.defaultGroup.value.takeIf { it != Group.GENERAL && st.group(it) != null }
+            ?: prefs.getString("active", Group.GENERAL)!!).let { if (st.group(it) != null) it else Group.GENERAL }
         db = Db(app); try { db.load(st) } catch (_: Exception) {}
         mesh = Mesh(app, st) { f -> main.post(f) }
         mesh.onGroupsChanged = { GroupStore.save(prefs, st.groups) }
@@ -64,6 +67,7 @@ object Hub {
     private fun post(id: Int, n: android.app.Notification) { if (canNotify()) try { NotificationManagerCompat.from(app).notify(id, n) } catch (_: Exception) {} }
 
     private fun notifyMsg(m: ChatMsg) {
+        if (!st.settings.notifyMsg.value) return
         if (uiVisible && st.openChat.value == m.group) return
         val g = st.group(m.group) ?: return
         post(1000 + (m.group.hashCode() and 0xfff), NotificationCompat.Builder(app, CH_MSG).setSmallIcon(R.drawable.ic_notif)
@@ -72,6 +76,7 @@ object Hub {
     }
 
     private fun notifySos(a: SosAlert) {
+        if (!st.settings.notifySos.value) return
         post(notifId++, NotificationCompat.Builder(app, if (a.isLocation) CH_MSG else CH_SOS).setSmallIcon(R.drawable.ic_notif)
             .setContentTitle(if (a.isLocation) "${a.sender} شارك موقعه" else "🆘 استغاثة من ${a.sender}")
             .setContentText(a.lat?.let { "الموقع: %.5f, %.5f".format(java.util.Locale.US, it, a.lon) } ?: "بدون موقع")
@@ -80,7 +85,7 @@ object Hub {
 
     private var lastVoice = 0L
     private fun notifyVoice(name: String, gid: String) {
-        if (uiVisible || System.currentTimeMillis() - lastVoice < 15_000) return
+        if (!st.settings.notifyVoice.value || uiVisible || System.currentTimeMillis() - lastVoice < 15_000) return
         lastVoice = System.currentTimeMillis()
         post(900, NotificationCompat.Builder(app, CH_VOICE).setSmallIcon(R.drawable.ic_notif).setContentTitle("🎙️ $name يتكلم")
             .setContentText(st.group(gid)?.name ?: "").setTimeoutAfter(20_000).setAutoCancel(true).setContentIntent(openAppIntent(gid)).build())

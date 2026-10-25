@@ -3,7 +3,7 @@
 | البند | القيمة |
 |---|---|
 | Package name | com.watan.nidaa |
-| Version | 1.2.0 (versionCode 3) |
+| Version | 1.3.0 (versionCode 4) |
 | Category | Communication (التواصل) |
 | Tags | Walkie-talkie, Offline messaging |
 | Price | Free (مجاني) |

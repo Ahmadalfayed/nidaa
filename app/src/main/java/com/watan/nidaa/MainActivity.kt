@@ -38,21 +38,24 @@ class MainActivity : ComponentActivity(), Actions {
     }.toTypedArray()
 
     private var pendingStart = false
+
     private val askPerms = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { res ->
         signal.startLocation()
         if (pendingStart) { pendingStart = false
             val missing = res.filter { !it.value && it.key != Manifest.permission.READ_PHONE_STATE && it.key != Manifest.permission.RECORD_AUDIO && it.key != Manifest.permission.POST_NOTIFICATIONS }
             if (missing.isNotEmpty()) toast("بعض الصلاحيات مرفوضة (الموقع أو الأجهزة القريبة). بيحاول يشتغل، وإذا ما لقى أحد افتح «الاتصال» ← نصائح")
-            MeshService.start(this)
+            Hub.bgRunning = st.settings.background.value
+            if (Hub.bgRunning) MeshService.start(this) else mesh.start()
             if (!prefs.getBoolean("askedBattery", false)) { prefs.edit().putBoolean("askedBattery", true).apply(); if ("battery" in st.warnings || !isIgnoringBattery()) openSettings("battery") }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         Hub.init(this)
+        applySettings()
         handleIntent(intent)
+        if (st.settings.autoStart.value && !st.meshOn.value) pendingStart = true
         askPerms.launch(perms)
         setContent { NidaaApp(st, this) }
     }
@@ -81,7 +84,7 @@ class MainActivity : ComponentActivity(), Actions {
     private fun toast(t: String) = Toast.makeText(this, t, Toast.LENGTH_LONG).show()
     private fun saveGroups() = GroupStore.save(prefs, st.groups)
 
-    override fun toggleMesh() { if (st.meshOn.value) MeshService.stop(this) else { pendingStart = true; askPerms.launch(perms) } }
+    override fun toggleMesh() { if (st.meshOn.value) { if (Hub.bgRunning) MeshService.stop(this) else mesh.stop() } else { pendingStart = true; askPerms.launch(perms) } }
     override fun selectGroup(id: String) { st.activeGroup.value = id; prefs.edit().putString("active", id).apply() }
     override fun openChat(id: String?) { st.openChat.value = id; if (id != null) selectGroup(id) }
     override fun createGroup(name: String, private: Boolean, pin: String): Group? {
@@ -138,4 +141,14 @@ class MainActivity : ComponentActivity(), Actions {
     }
     override fun copy(text: String) { (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("nidaa", text)); toast("انسخ") }
     override fun showAbout(v: Boolean) { st.showAbout.value = v }
+    override fun showSettings(v: Boolean) { st.showSettings.value = v }
+    override fun testBeep() = mesh.testTone().let { }
+    override fun settingsChanged() {
+        st.settings.save(prefs); applySettings()
+    }
+    private fun applySettings() {
+        if (st.settings.keepScreenOn.value) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        volumeControlStream = if (st.settings.speaker.value) android.media.AudioManager.STREAM_MUSIC else android.media.AudioManager.STREAM_VOICE_CALL
+    }
+    override fun onDestroy() { super.onDestroy(); if (isFinishing && st.meshOn.value && !Hub.bgRunning) mesh.stop() }
 }

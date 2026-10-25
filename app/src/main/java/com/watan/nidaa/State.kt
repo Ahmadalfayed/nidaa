@@ -24,6 +24,8 @@ data class TransportStatus(val name: String, val ok: Boolean, val text: String)
 
 /** All UI state lives here so screens can be rendered with sample data. */
 class AppState {
+    val settings = Settings()
+    val showSettings = mutableStateOf(false)
     val nodeId = mutableStateOf("")
     val myName = mutableStateOf("")
     val meshOn = mutableStateOf(false)
@@ -77,4 +79,7 @@ interface Actions {
     fun makeDiscoverable() {}
     fun copy(text: String) {}
     fun showAbout(v: Boolean) {}
+    fun showSettings(v: Boolean) {}
+    fun settingsChanged() {}
+    fun testBeep() {}
 }

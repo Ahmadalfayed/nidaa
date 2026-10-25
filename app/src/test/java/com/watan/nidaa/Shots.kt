@@ -48,6 +48,8 @@ class Shots {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) { TextButton({}) { Text("إلغاء") }; Button({}) { Text("إنشاء") } }
         } } } }; rule.onRoot().captureRoboImage("../screenshots/11-create-group.png") }
     @Test fun createdDialog() { rule.setContent { NidaaTheme { CreatedDialog(Group("p-K7Q2MF", "ربع البر", true, "1234"), object : Actions {}) {} } }; com.github.takahirom.roborazzi.captureScreenRoboImage("../screenshots/12-group-code.png") }
+    @Test fun settings() = shot(Tab.Talk, "14-settings", sample().apply { showSettings.value = true })
+    @Test @Config(qualifiers = "ar-w393dp-h2200dp-xxhdpi") fun settingsFull() = shot(Tab.Talk, "15-settings-full", sample().apply { showSettings.value = true })
     @Test fun talkWarn() = shot(Tab.Talk, "13-talk-warning", sample().apply { warnings.add("location") })
     @Test fun signal() = shot(Tab.Signal, "04-signal")
     @Test fun sos() = shot(Tab.Sos, "05-sos")

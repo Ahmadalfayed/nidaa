@@ -35,6 +35,7 @@ class StoreShots {
     @Test fun s4() = shot(Tab.Link, "4-connection")
     @Test fun s5() = shot(Tab.Sos, "5-sos")
     @Test fun s6() = shot(Tab.Signal, "6-signal")
+    @Test fun s7() = shot(Tab.Talk, "7-settings", Samples.state().apply { showSettings.value = true })
 }
 
 @RunWith(RobolectricTestRunner::class) @GraphicsMode(GraphicsMode.Mode.NATIVE)

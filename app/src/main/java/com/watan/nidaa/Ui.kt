@@ -76,6 +76,8 @@ fun NidaaApp(st: AppState, a: Actions, start: Tab = Tab.Talk) {
     NidaaTheme {
         val chat = st.openChat.value?.let { st.group(it) }
         if (chat != null) { GroupChatScreen(st, a, chat); return@NidaaTheme }
+        if (st.showSettings.value) { Column(Modifier.fillMaxSize().background(Night).statusBarsPadding().navigationBarsPadding()) {
+            BackBar("الإعدادات") { a.showSettings(false) }; SettingsScreen(st, a) }; return@NidaaTheme }
         if (st.showAbout.value) { Column(Modifier.fillMaxSize().background(Night).statusBarsPadding().navigationBarsPadding()) {
             BackBar("حول «نِداء»") { a.showAbout(false) }; AboutScreen(st, a) }; return@NidaaTheme }
         Scaffold(containerColor = Night, topBar = { TopBar(st, a) { tab = Tab.Link } }, bottomBar = {
@@ -118,7 +120,7 @@ fun TopBar(st: AppState, a: Actions, onStatus: () -> Unit = {}) {
             Text("نِداء", style = MaterialTheme.typography.titleLarge, color = Gold)
             Text(st.status.value.ifEmpty { "تواصل بدون إنترنت" }, style = MaterialTheme.typography.bodySmall, color = Muted, maxLines = 1)
         }
-        IconButton(onClick = { a.showAbout(true) }) { Icon(Icons.Filled.Info, "حول", tint = Muted) }
+        IconButton(onClick = { a.showSettings(true) }) { Icon(Icons.Filled.Settings, "الإعدادات", tint = Sand) }
         val on = st.meshOn.value
         FilledTonalButton(onClick = a::toggleMesh, colors = ButtonDefaults.filledTonalButtonColors(containerColor = if (on) Ok.copy(.18f) else Card2, contentColor = if (on) Ok else Sand)) {
             Icon(if (on) Icons.Filled.WifiTethering else Icons.Filled.WifiTetheringOff, null, Modifier.size(18.dp)); Spacer(Modifier.width(6.dp))
@@ -348,8 +350,9 @@ fun AboutScreen(st: AppState, a: Actions) {
     var name by remember { mutableStateOf(st.myName.value) }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Logo(88); Text("نِداء", style = MaterialTheme.typography.headlineSmall, color = Gold); Text("الإصدار 1.2.0", color = Muted)
+            Logo(88); Text("نِداء", style = MaterialTheme.typography.headlineSmall, color = Gold); Text("الإصدار 1.3.0", color = Muted)
         }
+        Button(onClick = { a.showAbout(false); a.showSettings(true) }, modifier = Modifier.fillMaxWidth().height(50.dp)) { Icon(Icons.Filled.Settings, null); Spacer(Modifier.width(8.dp)); Text("الإعدادات") }
         SectionCard {
             Text("اسمك اللي يشوفونه الباقين", style = MaterialTheme.typography.titleMedium); Spacer(Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
